@@ -63,3 +63,4 @@ setup:
 
 ap-model:
 	go-bindata -ignore=\\.DS_Store -pkg="tag" -o tag/apmodel.go tag/ap*.gob
+	gofmt -w -s tag/apmodel.go
