@@ -40,8 +40,15 @@ func ReadTagged(text, sep string) TupleSlice {
 	return t
 }
 
-// GetAsset returns the named Asset.
-func GetAsset(name string) (*gob.Decoder, error) {
-	b, err := Asset(name)
-	return gob.NewDecoder(bytes.NewReader(b)), err
+func getAsset(name string) *gob.Decoder {
+	loc := "tag/" + name
+	return gob.NewDecoder(bytes.NewReader(MustAsset(loc)))
+}
+
+func mustDecode(name string, e interface{}) {
+	dec := getAsset(name)
+	err := dec.Decode(e)
+	if err != nil {
+		panic(err)
+	}
 }

@@ -65,14 +65,9 @@ func NewPerceptronTagger() *PerceptronTagger {
 	var tags map[string]string
 	var classes []string
 
-	dec, _ := GetAsset("apclasses.gob")
-	dec.Decode(&classes)
-
-	dec, _ = GetAsset("aptags.gob")
-	dec.Decode(&tags)
-
-	dec, _ = GetAsset("apweights.gob")
-	dec.Decode(&wts)
+	mustDecode("apclasses.gob", &classes)
+	mustDecode("aptags.gob", &tags)
+	mustDecode("apweights.gob", &wts)
 
 	return &PerceptronTagger{model: NewAveragedPerceptron(wts, tags, classes)}
 }
