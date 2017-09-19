@@ -8,8 +8,8 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/jdkato/prose/internal/util"
 	"github.com/jdkato/prose/tokenize"
+	funk "github.com/thoas/go-funk"
 
 	"github.com/montanaflynn/stats"
 )
@@ -210,9 +210,14 @@ func (s byIndex) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }
 func (s byIndex) Less(i, j int) bool { return s[i].Position < s[j].Position }
 
 func isComplex(word string, syllables int) bool {
-	if util.HasAnySuffix(word, []string{"es", "ed", "ing"}) {
+	has := funk.Find([]string{"es", "ed", "ing"}, func(x string) bool {
+		return strings.HasSuffix(word, x)
+	})
+
+	if has != nil {
 		syllables--
 	}
+
 	return syllables > 2
 }
 

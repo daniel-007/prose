@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/jdkato/prose/internal/util"
 	"github.com/stretchr/testify/assert"
+	"github.com/thoas/go-funk"
 )
 
 var wsj = "Pierre|NNP Vinken|NNP ,|, 61|CD years|NNS old|JJ ,|, will|MD " +
@@ -41,7 +41,7 @@ func TestTrain(t *testing.T) {
 	for _, tuple := range sentences {
 		nrWords += len(tuple[0])
 		for _, tag := range tuple[1] {
-			if !util.StringInSlice(tag, tagSet) {
+			if !funk.Contains(tagSet, tag) {
 				tagSet = append(tagSet, tag)
 			}
 		}
@@ -49,7 +49,7 @@ func TestTrain(t *testing.T) {
 
 	assert.Equal(t, nrWords*iter, int(tagger.model.instances))
 	for _, tag := range tagSet {
-		assert.True(t, util.StringInSlice(tag, tagger.model.classes))
+		assert.True(t, funk.Contains(tagger.model.classes, tag))
 	}
 }
 

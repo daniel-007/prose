@@ -3,7 +3,7 @@ package summarize
 import (
 	"math"
 
-	"github.com/jdkato/prose/internal/util"
+	"github.com/thoas/go-funk"
 )
 
 // FleschKincaid computes the Flesch–Kincaid grade level
@@ -56,8 +56,7 @@ func (d *Document) ColemanLiau() float64 {
 func (d *Document) DaleChall() float64 {
 	easy := 0.0
 	for word := range d.WordFrequency {
-		// TODO: look into more efficient lookup techniques.
-		if util.StringInSlice(word, easyWords) {
+		if funk.Contains(easyWords, word) {
 			easy++
 		}
 	}

@@ -3,8 +3,8 @@ package summarize
 import (
 	"strings"
 
-	"github.com/jdkato/prose/internal/util"
 	"github.com/montanaflynn/stats"
+	"github.com/thoas/go-funk"
 )
 
 // WordDensity returns a map of each word and its density.
@@ -26,7 +26,7 @@ func (d *Document) Keywords() map[string]int {
 	scores := map[string]int{}
 	for word, freq := range d.WordFrequency {
 		normalized := strings.ToLower(word)
-		if util.StringInSlice(normalized, stopWords) {
+		if funk.Contains(stopWords, normalized) {
 			continue
 		}
 		if _, found := scores[normalized]; found {

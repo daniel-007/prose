@@ -25,9 +25,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/jdkato/prose/internal/util"
 	"github.com/montanaflynn/stats"
 	"github.com/shogo82148/go-shuffle"
+	"github.com/thoas/go-funk"
 )
 
 var none = regexp.MustCompile(`^(?:0|\*[\w?]\*|\*\-\d{1,3}|\*[A-Z]+\*\-\d{1,3}|\*)$`)
@@ -243,7 +243,7 @@ func (ap *AveragedPerceptron) updateFeat(c, f string, v, w float64) {
 }
 
 func (ap *AveragedPerceptron) addClass(class string) {
-	if !util.StringInSlice(class, ap.classes) {
+	if !funk.Contains(ap.classes, class) {
 		ap.classes = append(ap.classes, class)
 	}
 }
@@ -278,10 +278,10 @@ func max(scores map[string]float64) string {
 
 func featurize(i int, ctx []string, w, p1, p2 string) map[string]float64 {
 	feats := make(map[string]float64)
-	suf := util.Min(len(w), 3)
-	i = util.Min(len(ctx)-2, i+2)
-	iminus := util.Min(len(ctx[i-1]), 3)
-	iplus := util.Min(len(ctx[i+1]), 3)
+	suf := min(len(w), 3)
+	i = min(len(ctx)-2, i+2)
+	iminus := min(len(ctx[i-1]), 3)
+	iplus := min(len(ctx[i+1]), 3)
 	feats = add([]string{"bias"}, feats)
 	feats = add([]string{"i suffix", w[len(w)-suf:]}, feats)
 	feats = add([]string{"i pref1", string(w[0])}, feats)
@@ -349,4 +349,11 @@ func get(k string, m map[string]float64) float64 {
 		return v
 	}
 	return 0.0
+}
+
+func min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
 }

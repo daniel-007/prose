@@ -29,7 +29,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/jdkato/prose/internal/util"
+	"github.com/thoas/go-funk"
 )
 
 /* Public API */
@@ -370,11 +370,11 @@ func (r *abbreviationReplacer) scan(text, am string, idx int, chars []string) st
 	number := r.definition.abbreviations()["number"]
 	upper := character != "" && character == strings.ToUpper(character)
 	clean := strings.TrimSpace(strings.ToLower(am))
-	prep := util.StringInSlice(clean, prepositive)
+	prep := funk.Contains(prepositive, clean)
 	if !upper || prep {
 		if prep {
 			text = r.replacePrepositive(text, am)
-		} else if util.StringInSlice(clean, number) {
+		} else if funk.Contains(number, clean) {
 			text = r.replaceNumber(text, am)
 		} else {
 			text = r.replacePeriod(text, am)
@@ -699,7 +699,13 @@ func (p *processor) checkPunct(text string) []string {
 	segments := []string{}
 
 	chars := p.abbrReplacer.definition.punctuation()
-	if util.ContainsAny(text, chars) {
+
+	// Check if `text` has any punctuation.
+	hasPunct := funk.Find(chars, func(x string) bool {
+		return strings.Contains(text, x)
+	})
+
+	if hasPunct != nil {
 		segments = append(segments, p.processText(text)...)
 	} else {
 		segments = append(segments, text)
@@ -717,9 +723,16 @@ func (p *processor) checkPunct(text string) []string {
 
 func (p *processor) processText(text string) []string {
 	pRules := p.abbrReplacer.definition.punctRules()
-	if !util.HasAnySuffix(text, p.abbrReplacer.definition.punctuation()) {
+	punc := p.abbrReplacer.definition.punctuation()
+
+	has := funk.Find(punc, func(x string) bool {
+		return strings.HasSuffix(text, x)
+	})
+
+	if has == nil {
 		text = text + "ȸ"
 	}
+
 	text = subPat(text, "double", exclamationWordsRE)
 	text = replaceBetweenQuotes(text)
 	text = applyRules(text, p.abbrReplacer.definition.doublePunctRules())

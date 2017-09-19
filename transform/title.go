@@ -6,7 +6,7 @@ import (
 	"unicode"
 	"unicode/utf8"
 
-	"github.com/jdkato/prose/internal/util"
+	"github.com/thoas/go-funk"
 )
 
 // An IgnoreFunc is a TitleConverter callback that decides whether or not the
@@ -50,7 +50,6 @@ func (tc *TitleConverter) Title(s string) string {
 		prev := charAt(t, pos-1)
 		ext := len(m)
 		idx = pos + ext
-		// pos > 0 && (pos+ext) < end && util.StringInSlice(sm, smallWords)
 		if tc.ignore(sm, pos == 0 || idx == end) &&
 			(prev == ' ' || prev == '-' || prev == '/') &&
 			charAt(t, pos-2) != ':' && charAt(t, pos-2) != '-' &&
@@ -62,11 +61,11 @@ func (tc *TitleConverter) Title(s string) string {
 }
 
 func optionsAP(word string, bounding bool) bool {
-	return !bounding && util.StringInSlice(word, smallWords)
+	return !bounding && funk.Contains(smallWords, word)
 }
 
 func optionsChicago(word string, bounding bool) bool {
-	return !bounding && (util.StringInSlice(word, smallWords) || util.StringInSlice(word, prepositions))
+	return !bounding && (funk.Contains(smallWords, word) || funk.Contains(prepositions, word))
 }
 
 var smallWords = []string{

@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/jdkato/prose/internal/util"
+	"github.com/thoas/go-funk"
 )
 
 func BenchmarkEasyWordsLookup(b *testing.B) {
@@ -15,7 +16,7 @@ func BenchmarkEasyWordsLookup(b *testing.B) {
 
 	for n := 0; n < b.N; n++ {
 		for word := range tests {
-			util.StringInSlice(word, easyWords)
+			funk.Contains(easyWords, word)
 		}
 	}
 }
