@@ -25,7 +25,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/jdkato/prose/internal/model"
 	"github.com/jdkato/prose/internal/util"
 	"github.com/montanaflynn/stats"
 	"github.com/shogo82148/go-shuffle"
@@ -66,14 +65,14 @@ func NewPerceptronTagger() *PerceptronTagger {
 	var tags map[string]string
 	var classes []string
 
-	dec := model.GetAsset("classes.gob")
-	util.CheckError(dec.Decode(&classes))
+	dec, _ := GetAsset("apclasses.gob")
+	dec.Decode(&classes)
 
-	dec = model.GetAsset("tags.gob")
-	util.CheckError(dec.Decode(&tags))
+	dec, _ = GetAsset("aptags.gob")
+	dec.Decode(&tags)
 
-	dec = model.GetAsset("weights.gob")
-	util.CheckError(dec.Decode(&wts))
+	dec, _ = GetAsset("apweights.gob")
+	dec.Decode(&wts)
 
 	return &PerceptronTagger{model: NewAveragedPerceptron(wts, tags, classes)}
 }

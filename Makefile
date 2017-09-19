@@ -62,5 +62,5 @@ setup:
 	go-bindata -ignore=\\.DS_Store -pkg="model" -o internal/model/model.go internal/model/
 	gometalinter --install
 
-model:
-	go-bindata -ignore=\\.DS_Store -pkg="model" -o internal/model/model.go internal/model/*.gob
+ap-model:
+	go-bindata -ignore=\\.DS_Store -pkg="tag" -o tag/apmodel.go tag/ap*.gob

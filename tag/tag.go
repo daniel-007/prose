@@ -3,7 +3,11 @@ Package tag implements functions for tagging parts of speech.
 */
 package tag
 
-import "strings"
+import (
+	"bytes"
+	"encoding/gob"
+	"strings"
+)
 
 // Token represents a tagged section of text.
 type Token struct {
@@ -34,4 +38,10 @@ func ReadTagged(text, sep string) TupleSlice {
 		t = append(t, [][]string{tokens, tags})
 	}
 	return t
+}
+
+// GetAsset returns the named Asset.
+func GetAsset(name string) (*gob.Decoder, error) {
+	b, err := Asset(name)
+	return gob.NewDecoder(bytes.NewReader(b)), err
 }
