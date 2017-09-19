@@ -20,5 +20,5 @@ do
 
 done
 
-sed -i '' "/model/d" acc.out # We don't want to count generated models.
+sed -i "/model/d" acc.out # We don't want to count generated models.
 goveralls -coverprofile=acc.out -service=travis-ci
