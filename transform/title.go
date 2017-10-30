@@ -48,9 +48,8 @@ func (tc *TitleConverter) Title(s string) string {
 		sm := strings.ToLower(m)
 		pos = strings.Index(t[idx:], m) + idx
 		prev := charAt(t, pos-1)
-		ext := len(m)
+		ext := utf8.RuneCountInString(m)
 		idx = pos + ext
-		// pos > 0 && (pos+ext) < end && util.StringInSlice(sm, smallWords)
 		if tc.ignore(sm, pos == 0 || idx == end) &&
 			(prev == ' ' || prev == '-' || prev == '/') &&
 			charAt(t, pos-2) != ':' && charAt(t, pos-2) != '-' &&
@@ -71,7 +70,7 @@ func optionsChicago(word string, bounding bool) bool {
 
 var smallWords = []string{
 	"a", "an", "and", "as", "at", "but", "by", "en", "for", "if", "in", "nor",
-	"of", "on", "or", "per", "the", "to", "vs", "vs.", "via", "v", "v."}
+	"of", "on", "or", "per", "the", "to", "vs", "vs.", "via", "v", "v.", "us"}
 
 var prepositions = []string{
 	"with", "from", "into", "during", "including", "until", "against", "among",
